@@ -1,0 +1,691 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Organizador acadêmico · UFMS</title><style>
+:root{--bg:210 33% 97%;--surface:0 0% 100%;--ink:210 23% 19%;--muted:207 11% 50%;--line:207 20% 90%;--accent:209 64% 40%;--soft:208 52% 95%;--danger:3 47% 49%;--danger-soft:8 100% 97%;--warm:40 75% 33%;--warm-soft:42 100% 94%;--shade:205 22% 94%;--surface-alt:210 33% 99%;--success:155 48% 30%}
+*{box-sizing:border-box}body{margin:0;background:hsl(var(--bg));color:hsl(var(--ink));font:14px/1.5 "Segoe UI",Arial,sans-serif}a{color:hsl(var(--accent));text-decoration:none}a:hover{text-decoration:underline}button,input{font:inherit}button{cursor:pointer;color:inherit}
+.app{min-height:100vh;display:grid;grid-template-columns:230px minmax(0,1fr);max-width:1600px;margin:auto}.sidebar{position:sticky;top:0;height:100vh;overflow:auto;background:hsl(var(--surface));border-right:1px solid hsl(var(--line));padding:19px 13px}.brand{padding:2px 9px 16px;border-bottom:1px solid hsl(var(--line))}.brand small{color:hsl(var(--accent));font-size:9px;font-weight:850;letter-spacing:.12em}.brand strong{display:block;margin-top:5px;font-size:15px}.nav{display:grid;gap:4px;padding:13px 0;border-bottom:1px solid hsl(var(--line))}.nav button{display:flex;align-items:center;gap:8px;border:0;background:transparent;text-align:left;padding:8px 9px;border-radius:8px;color:hsl(var(--muted));font-size:11px}.nav button:hover,.nav button.active{background:hsl(var(--soft));color:hsl(var(--accent));font-weight:750}.nav b{width:17px;text-align:center;font-size:12px}.side-label{display:flex;justify-content:space-between;gap:8px;padding:14px 8px 6px;color:hsl(var(--muted));font-size:9px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.search{width:100%;padding:8px 9px;border:1px solid hsl(var(--line));border-radius:8px;background:hsl(var(--bg));color:hsl(var(--ink));font-size:11px;outline:none}.search:focus{border-color:hsl(var(--accent));box-shadow:0 0 0 2px hsl(var(--soft))}.course-list{display:grid;gap:3px;margin-top:6px}.course-link{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px;align-items:center;width:100%;border:0;background:transparent;border-radius:8px;padding:7px 8px;text-align:left;color:hsl(var(--muted))}.course-link:hover,.course-link.active{background:hsl(var(--soft));color:hsl(var(--accent))}.course-link>span:first-child{min-width:0}.course-link strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;font-weight:650}.course-link small{display:block;color:hsl(var(--muted));font-size:9px;margin-top:2px}.course-count{font-size:9px;color:hsl(var(--muted));white-space:nowrap}.main{padding:25px;min-width:0}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}.top h1{font-size:24px;letter-spacing:-.025em;line-height:1.2;margin:2px 0 0}.top p{font-size:11px;color:hsl(var(--muted));margin:5px 0 0}.eyebrow{font-size:9px;color:hsl(var(--accent));font-weight:850;letter-spacing:.1em;text-transform:uppercase}.snapshot{border:1px solid hsl(var(--line));border-radius:8px;padding:7px 9px;color:hsl(var(--muted));font-size:10px;white-space:nowrap;background:hsl(var(--surface))}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:0 0 13px}.metric,.panel{background:hsl(var(--surface));border:1px solid hsl(var(--line));border-radius:12px}.metric{padding:12px 13px}.metric strong{display:block;font-size:22px;line-height:1.05;font-variant-numeric:tabular-nums}.metric span{display:block;margin-top:5px;font-size:10px;color:hsl(var(--muted))}.metric.alert strong{color:hsl(var(--warm))}.metric.todo strong{color:hsl(var(--danger))}.panel{padding:14px;min-width:0}.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:11px}.panel-head h2{font-size:13px;line-height:1.35;margin:0}.panel-head p{font-size:10px;color:hsl(var(--muted));margin:4px 0 0}.count{font-size:10px;color:hsl(var(--muted));white-space:nowrap}.home-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(270px,.75fr);gap:11px;align-items:start}.stack{display:grid;gap:11px}.actions-list{display:grid}.action-row{display:grid;grid-template-columns:104px minmax(0,1fr) auto;gap:9px;align-items:center;padding:9px 0;border-top:1px solid hsl(var(--line))}.action-row:first-child{border-top:0;padding-top:0}.action-main{min-width:0}.action-main strong{display:block;font-size:10px;line-height:1.35}.action-main small{display:block;margin-top:3px;font-size:9px;color:hsl(var(--muted));line-height:1.4}.action-open{font-size:9px;font-weight:800;white-space:nowrap}.pill{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:4px 7px;border-radius:99px;background:hsl(var(--soft));color:hsl(var(--accent));font-size:9px;font-weight:750;white-space:nowrap}.pill.wait{background:hsl(var(--warm-soft));color:hsl(var(--warm))}.pill.low{background:hsl(var(--danger-soft));color:hsl(var(--danger))}.pill.neutral{background:hsl(var(--shade));color:hsl(var(--muted))}.tabs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px}.tabs button{border:1px solid hsl(var(--line));background:hsl(var(--surface));padding:5px 8px;border-radius:99px;color:hsl(var(--muted));font-size:9px}.tabs button.active{border-color:hsl(var(--accent));background:hsl(var(--soft));color:hsl(var(--accent));font-weight:800}.more-button,.quiet-button{border:1px solid hsl(var(--line));border-radius:7px;background:hsl(var(--surface));padding:6px 8px;color:hsl(var(--accent));font-size:9px;font-weight:750}.empty{border:1px dashed hsl(var(--line));border-radius:9px;padding:11px;color:hsl(var(--muted));font-size:10px;line-height:1.5}.empty button{margin-top:7px}.completion{display:grid;grid-template-columns:90px minmax(0,1fr);align-items:center;gap:12px}.ring{width:84px;height:84px;border-radius:50%;background:conic-gradient(hsl(var(--accent)) var(--pct),hsl(var(--shade)) 0);display:grid;place-items:center;position:relative}.ring:before{content:"";position:absolute;inset:8px;background:hsl(var(--surface));border-radius:50%}.ring strong{position:relative;font-size:18px}.completion-text strong{display:block;font-size:11px}.completion-text small{display:block;color:hsl(var(--muted));font-size:9px;margin-top:3px}.summary-row{display:flex;justify-content:space-between;gap:10px;border-top:1px solid hsl(var(--line));padding:8px 0;font-size:10px}.summary-row:first-of-type{margin-top:10px}.summary-row span{color:hsl(var(--muted))}.summary-row b{font-variant-numeric:tabular-nums}
+.course-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.course-head h2{font-size:18px;margin:0}.course-head p{font-size:10px;color:hsl(var(--muted));margin:4px 0 0}.course-actions{display:flex;flex-wrap:wrap;gap:6px}.button-link{display:inline-flex;align-items:center;justify-content:center;border:1px solid hsl(var(--line));border-radius:8px;padding:6px 9px;font-size:9px;font-weight:750;white-space:nowrap}.course-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:12px 0}.course-stat{background:hsl(var(--bg));border:1px solid hsl(var(--line));border-radius:8px;padding:8px}.course-stat span{display:block;color:hsl(var(--muted));font-size:9px}.course-stat b{display:block;font-size:12px;margin-top:3px}.module-list{display:grid;gap:7px}.module{border:1px solid hsl(var(--line));border-radius:9px;overflow:hidden;background:hsl(var(--surface))}.module summary{list-style:none;display:grid;grid-template-columns:minmax(0,1fr) auto auto 12px;align-items:center;gap:8px;padding:9px 10px;cursor:pointer}.module summary::-webkit-details-marker{display:none}.module-title{min-width:0}.module-title strong{display:block;font-size:10px;line-height:1.4}.module-title small{display:block;color:hsl(var(--muted));font-size:9px;margin-top:2px}.module-grade{font-size:11px;font-weight:850;font-variant-numeric:tabular-nums}.module-body{border-top:1px solid hsl(var(--line));padding:10px;background:hsl(var(--surface-alt))}.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.fact{padding:7px;background:hsl(var(--surface));border:1px solid hsl(var(--line));border-radius:7px;min-width:0}.fact span{display:block;color:hsl(var(--muted));font-size:8px}.fact b{display:block;font-size:9px;margin-top:3px;line-height:1.35;overflow-wrap:anywhere}.module-details{display:grid;gap:6px;margin-top:8px}.module-details details{border:1px solid hsl(var(--line));border-radius:7px;background:hsl(var(--surface));padding:7px 8px}.module-details summary{cursor:pointer;color:hsl(var(--accent));font-size:9px;font-weight:750}.module-details p{font-size:9px;line-height:1.5;color:hsl(var(--muted));white-space:pre-wrap;overflow-wrap:anywhere;max-height:420px;overflow:auto}.evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:7px}.evidence-item{border-radius:6px;background:hsl(var(--bg));padding:6px 7px;min-width:0}.evidence-item span{display:block;color:hsl(var(--muted));font-size:8px}.evidence-item b{display:block;font-size:9px;margin-top:2px;overflow-wrap:anywhere}.unit{border-top:1px solid hsl(var(--line));padding-top:7px;margin-top:7px}.unit:first-child{border-top:0;padding-top:0;margin-top:0}.unit h4{font-size:9px;margin:0 0 4px}.material{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 0;font-size:9px}.material span{min-width:0;color:hsl(var(--muted))}.material a{white-space:nowrap;font-weight:750}.folder-path{font:9px Consolas,monospace;color:hsl(var(--muted));overflow-wrap:anywhere;margin-top:7px}.small-note{font-size:9px;color:hsl(var(--muted));line-height:1.45}.section-space{display:grid;gap:10px}.chart-list{display:grid;gap:8px}.chart-row{display:grid;grid-template-columns:minmax(110px,1fr) minmax(100px,2fr) 42px;align-items:center;gap:9px}.chart-row button{border:0;background:transparent;padding:0;text-align:left;color:hsl(var(--muted));font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chart-row button:hover{color:hsl(var(--accent));text-decoration:underline}.bar{height:8px;border-radius:99px;background:hsl(var(--shade));overflow:hidden}.bar i{display:block;height:100%;border-radius:99px;background:hsl(var(--accent))}.bar i.low{background:hsl(var(--danger))}.chart-score{text-align:right;font-size:10px;font-weight:800;font-variant-numeric:tabular-nums}.grade-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:9px;align-items:center;padding:8px 0;border-top:1px solid hsl(var(--line))}.grade-row:first-child{border-top:0}.grade-number{font-size:12px;font-weight:850;color:hsl(var(--danger));font-variant-numeric:tabular-nums}.grade-row strong{display:block;font-size:10px}.grade-row small{display:block;color:hsl(var(--muted));font-size:9px;margin-top:2px}.assessment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.assessment{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;border:1px solid hsl(var(--line));border-radius:8px;padding:9px}.assessment strong{display:block;font-size:10px}.assessment small{display:block;color:hsl(var(--muted));font-size:9px;margin-top:2px}.assessment b{font-size:12px;font-variant-numeric:tabular-nums}.optional-card{border-left:3px solid hsl(var(--warm));padding-left:10px}.footer-note{margin:11px 2px;color:hsl(var(--muted));font-size:9px}
+@media(max-width:960px){.app{grid-template-columns:1fr}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid hsl(var(--line))}.course-list{grid-template-columns:repeat(3,minmax(0,1fr));max-height:170px;overflow:auto}.nav{display:flex;flex-wrap:wrap}.home-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.main{padding:14px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.top,.course-head{flex-direction:column}.snapshot{white-space:normal}.course-actions{width:100%}.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.assessment-grid{grid-template-columns:1fr}.action-row{grid-template-columns:1fr auto}.action-row>.pill{grid-column:1/-1}.course-list{grid-template-columns:repeat(2,minmax(0,1fr))}.completion{grid-template-columns:76px minmax(0,1fr)}.ring{width:72px;height:72px}}
+
+
+.brand small,.side-label,.eyebrow{letter-spacing:normal;text-transform:none}
+.nav button{gap:0}
+.eval-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.eval-card{min-width:0;border:1px solid hsl(var(--line));border-radius:8px;padding:10px;background:hsl(var(--surface))}
+.eval-card>span{display:block;color:hsl(var(--muted));font-size:11px}
+.eval-card strong{display:block;font-size:13px;line-height:1.35;margin-top:4px}
+.eval-card small{display:block;color:hsl(var(--muted));font-size:11px;line-height:1.45;margin-top:4px}
+.eval-card .button-link{margin-top:7px}
+.eval-card.good strong{color:hsl(var(--success))}
+.eval-card.low strong{color:hsl(var(--danger))}
+.eval-card.wait strong{color:hsl(var(--warm))}
+.eval-note{border-left:2px solid hsl(var(--accent));padding:7px 9px;background:hsl(var(--bg));font-size:11px;line-height:1.5;color:hsl(var(--muted))}
+.eval-sources{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;font-size:11px}
+.small-note{font-size:10px}
+.module-title strong{font-size:11px}
+.module-title small{font-size:10px}
+.module-line>.pill{font-size:10px}
+.module-grade{font-size:12px}
+.module>summary{display:list-item;list-style:disclosure-closed;padding:9px 10px;cursor:pointer}
+.module>summary::-webkit-details-marker{display:list-item}
+.module[open]>summary{list-style:disclosure-open}
+.module-line{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px}
+.module-details summary{display:list-item;list-style:disclosure-closed}
+.module-details details[open]>summary{list-style:disclosure-open}
+.module-details summary::-webkit-details-marker{display:initial}
+@media(max-width:640px){.eval-grid{grid-template-columns:1fr}.module-line{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"title title" "status grade";row-gap:5px}.module-title{grid-area:title}.module-line>.pill{grid-area:status}.module-line>.module-grade{grid-area:grade}}
+.app{width:100%;max-width:none;grid-template-columns:290px minmax(0,1fr)}
+.sidebar{padding:24px 18px}
+.main{padding:32px clamp(26px,3vw,54px);max-width:1800px;width:100%;margin:0 auto}
+body{font-size:16px}
+.brand small,.side-label,.eyebrow{font-size:12px}
+.brand strong{font-size:20px}
+.nav button{font-size:14px;padding:10px 11px}
+.side-label{padding-top:20px}
+.search{font-size:14px;padding:11px 12px}
+.course-link{padding:10px}
+.course-link strong{font-size:13px}
+.course-link small,.course-count{font-size:11px}
+.course-link>.course-count{display:block;min-width:62px;text-align:right;white-space:normal;line-height:1.15}
+.course-count strong{display:block;color:hsl(var(--ink));font-size:10px}
+.course-count small{display:block;color:hsl(var(--muted));font-size:9px;margin-top:2px}
+.course-count.approved strong{color:hsl(var(--success))}
+.course-count.low strong{color:hsl(var(--danger))}
+.course-count.wait strong{color:hsl(var(--warm))}
+.nav .course-count{display:inline;min-width:0;font-size:11px;line-height:1.2}
+.top h1{font-size:32px}
+.top p{font-size:14px}
+.snapshot{font-size:12px;padding:9px 11px}
+.metrics{gap:14px;margin-bottom:18px}
+.metric{padding:17px 18px}
+.metric strong{font-size:29px}
+.metric span{font-size:13px}
+.panel{padding:19px}
+.panel-head h2{font-size:17px}
+.panel-head p,.small-note,.footer-note{font-size:12px}
+.home-grid{gap:16px;grid-template-columns:minmax(0,1.2fr) minmax(330px,.8fr)}
+.stack{gap:16px}
+.chart-list{gap:12px}
+.chart-row{grid-template-columns:minmax(150px,1fr) minmax(120px,2fr) 54px;gap:12px}
+.chart-row button{font-size:12px}
+.bar{height:13px}
+.chart-score{font-size:13px}
+.grade-row strong,.action-main strong{font-size:13px}
+.grade-row small,.action-main small{font-size:11px}
+.course-head h2{font-size:23px}
+.course-head p{font-size:13px}
+.button-link,.more-button,.quiet-button{font-size:12px;padding:9px 12px}
+.course-stat{padding:12px}
+.course-stat span{font-size:11px}
+.course-stat b{font-size:15px}
+.module summary{padding:13px 14px}
+.module-title strong{font-size:14px}
+.module-title small{font-size:12px}
+.module-grade{font-size:14px}
+.pill{font-size:11px;padding:5px 9px}
+.facts{gap:9px}
+.fact{padding:10px}
+.fact span,.evidence-item span{font-size:10px}
+.fact b,.evidence-item b{font-size:11px}
+.module-details summary,.module-details p,.material{font-size:11px}
+.attempt-note{margin-top:10px;padding:10px 12px;border-radius:8px;background:hsl(var(--warm-soft));color:hsl(var(--warm));font-size:12px;line-height:1.5}
+.header-actions{display:grid;justify-items:end;gap:6px}
+.refresh-button{border:0;border-radius:8px;background:hsl(var(--accent));color:white;font-weight:750;font-size:13px;padding:10px 14px;white-space:nowrap}
+.refresh-button:disabled{opacity:.65;cursor:wait}
+.refresh-status{max-width:360px;color:hsl(var(--muted));font-size:11px;text-align:right}
+.search-wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}
+.search-clear{border:1px solid hsl(var(--line));border-radius:8px;background:hsl(var(--surface));padding:0 10px;color:hsl(var(--muted));font-size:12px}
+.grade-attempt{margin-top:6px;padding:6px 8px;border-radius:6px;background:hsl(var(--warm-soft));color:hsl(var(--warm));font-size:10px;line-height:1.45}
+.grade-queue{display:grid;gap:8px}
+@media(max-width:1100px){.app{grid-template-columns:245px minmax(0,1fr)}.main{padding:24px}.home-grid{grid-template-columns:1fr}}
+.metrics{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(max-width:1100px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.app{grid-template-columns:1fr}.main{padding:16px}.top h1{font-size:27px}.header-actions{justify-items:start}.refresh-status{text-align:left}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric{padding:12px}.metric span{font-size:11px}.chart-row{grid-template-columns:minmax(96px,1fr) minmax(72px,1.5fr) 40px;gap:7px}.chart-row button{font-size:10px}.bar{height:10px}}
+.module-details{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.module-details details{padding:0;border-radius:10px;overflow:hidden;background:hsl(var(--surface))}
+.module-details details.detail-instruction{grid-column:1/-1}
+.module-details summary{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:58px;padding:13px 16px;list-style:none;background:hsl(var(--surface-alt));color:hsl(var(--ink));font-size:14px;font-weight:700;line-height:1.4}
+.module-details summary::-webkit-details-marker{display:none}
+.module-details summary::after{content:"+";display:grid;place-items:center;width:25px;height:25px;flex:0 0 25px;border:1px solid hsl(var(--line));border-radius:50%;color:hsl(var(--accent));font-size:17px;font-weight:500}
+.module-details details[open]{border-color:hsl(var(--accent))}
+.module-details details[open]>summary{background:hsl(var(--soft));color:hsl(var(--accent));border-bottom:1px solid hsl(var(--line))}
+.module-details details[open]>summary::after{content:"−"}
+.module-details summary:focus-visible{outline:3px solid hsl(var(--accent));outline-offset:-3px}
+.module-details details>p{max-height:560px;margin:0;padding:16px 18px;overflow:auto;background:hsl(var(--surface));color:hsl(var(--ink));font-size:13px;line-height:1.7}
+.module-details .evidence-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0;padding:14px}
+.module-details .evidence-item{padding:11px 12px;border:1px solid hsl(var(--line));background:hsl(var(--bg))}
+.module-details .evidence-item span{font-size:11px;font-weight:650}
+.module-details .evidence-item b{font-size:12px;line-height:1.5}
+.module-details .unit{margin:0;padding:12px 14px;border-top:1px solid hsl(var(--line))}
+.module-details .unit:first-child{border-top:0}
+.module-details .unit h4{margin:0 0 8px;padding:8px 10px;border-radius:7px;background:hsl(var(--bg));font-size:13px}
+.module-details .material{align-items:flex-start;gap:12px;padding:10px 4px;border-top:1px solid hsl(var(--line));font-size:12px;line-height:1.5}
+.module-details .material span{font-size:12px;line-height:1.5}
+.module-details .material a{font-size:12px}
+.module-details .small-note{padding:12px 16px}
+@media(max-width:760px){.module-details{grid-template-columns:1fr}.module-details details.detail-instruction{grid-column:auto}}
+@media(max-width:480px){.module-details .evidence-grid{grid-template-columns:1fr}.module-details summary{font-size:13px;padding:12px 13px}.module-details details>p{padding:13px;font-size:12px}}
+.module-details details.detail-evidence,.module-details details.detail-materials{grid-column:1/-1}
+.attempt-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:12px 0}
+.attempt-summary article{display:grid;gap:3px;padding:12px;border:1px solid hsl(var(--line));border-radius:9px;background:hsl(var(--surface-alt))}
+.attempt-summary strong{font-size:21px;line-height:1.1;font-variant-numeric:tabular-nums}
+.attempt-summary span{font-size:11px;line-height:1.4;color:hsl(var(--muted))}
+.attempt-summary article.exhausted{background:hsl(var(--shade))}
+.attempt-summary article.unknown{background:hsl(var(--warm-soft))}
+.grade-groups{display:grid;gap:18px;margin-top:14px}
+.grade-group{min-width:0;padding:0;border:0;border-radius:0;background:transparent}
+.grade-group-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:0 0 8px;border-bottom:1px solid hsl(var(--line))}
+.grade-group-head h3{margin:0;font-size:14px;line-height:1.4}
+.grade-group-head p{margin:3px 0 0;color:hsl(var(--muted));font-size:11px;line-height:1.5}
+.grade-group .grade-queue{margin-top:0}
+.grade-row{grid-template-columns:48px minmax(0,1fr) auto;gap:10px;align-items:start;padding:11px 2px;border-top:1px solid hsl(var(--line))}
+.grade-group .grade-row:first-child{border-top:0}
+.grade-row strong{font-size:12px;line-height:1.4}
+.grade-row small{font-size:11px;line-height:1.4}
+.grade-attempt{margin-top:4px;padding:0;background:transparent;font-size:11px;line-height:1.45}
+.grade-attempt.available{color:hsl(var(--warm))}
+.grade-attempt.exhausted{color:hsl(var(--muted))}
+.grade-attempt.unknown{color:hsl(var(--accent))}
+.grade-row .action-open{font-size:11px;padding:3px 0}
+@media(max-width:480px){.grade-row{grid-template-columns:40px minmax(0,1fr);gap:8px}.grade-row .action-open{grid-column:2;justify-self:start}.grade-row strong{font-size:11px}}
+.evidence-content{display:grid;gap:0;padding:0 16px 16px}
+.evidence-lead{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:15px 0;border-bottom:1px solid hsl(var(--line))}
+.evidence-lead>div{display:grid;gap:5px;min-width:0}
+.evidence-label,.evidence-file>span,.evidence-meta-item>span{color:hsl(var(--muted));font-size:11px;font-weight:600}
+.evidence-status-value{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:5px 9px;border-radius:999px;background:hsl(var(--surface-alt));color:hsl(var(--ink));font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.evidence-grade{text-align:right}
+.evidence-grade strong{font-size:20px;line-height:1.2;font-variant-numeric:tabular-nums}
+.evidence-attempt{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid hsl(var(--line))}
+.evidence-attempt>span:first-child{color:hsl(var(--muted));font-size:11px;font-weight:600}
+.evidence-attempt>strong{font-size:12px;line-height:1.5;text-align:right}
+.evidence-file{display:grid;gap:5px;padding:12px 0;border-bottom:1px solid hsl(var(--line))}
+.evidence-file>strong{font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+.evidence-meta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;padding:4px 0;border-bottom:1px solid hsl(var(--line))}
+.evidence-meta-item{display:grid;align-content:start;gap:5px;min-width:0;padding:9px 12px 9px 0}
+.evidence-meta-item strong{font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.teacher-feedback{margin:13px 0 0;padding:13px 15px;border:1px solid hsl(var(--line));border-left:3px solid hsl(var(--accent));border-radius:8px;background:hsl(var(--surface-alt))}
+.teacher-feedback>strong{display:block;margin-bottom:6px;font-size:12px}
+.teacher-feedback p{margin:0;color:hsl(var(--ink));font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.feedback-empty{margin-top:13px;padding:12px 14px;border-radius:8px;background:hsl(var(--surface-alt));color:hsl(var(--muted));font-size:12px}
+.evidence-read-error{margin:0;padding:10px 12px;border-radius:8px;background:hsl(var(--danger-soft));color:hsl(var(--danger));font-size:12px;line-height:1.5}
+@media(max-width:760px){.attempt-summary{grid-template-columns:1fr}.evidence-meta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.evidence-meta-grid{grid-template-columns:1fr}.evidence-content{padding:0 12px 12px}.evidence-lead{align-items:flex-start}.evidence-attempt{align-items:flex-start;flex-direction:column;gap:4px}.evidence-attempt>strong{text-align:left}.teacher-feedback{padding:12px}}
+
+.setup-screen,.loading-screen{min-height:100vh;display:grid;place-items:center;padding:28px;background:hsl(var(--bg))}
+.setup-card,.loading-card{width:min(100%,720px);border:1px solid hsl(var(--line));border-radius:18px;background:hsl(var(--surface));padding:clamp(24px,5vw,44px);box-shadow:0 12px 38px hsl(var(--ink)/.06)}
+.setup-card .eyebrow{margin:0 0 10px}.setup-card h1{margin:0;font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-.03em}
+.setup-card>p{max-width:580px;color:hsl(var(--muted));font-size:15px;line-height:1.65}
+.setup-steps{display:grid;gap:10px;margin:24px 0}.setup-step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;padding:12px;border:1px solid hsl(var(--line));border-radius:10px;background:hsl(var(--surface-alt))}
+.setup-step b{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:hsl(var(--soft));color:hsl(var(--accent))}
+.setup-step strong{display:block;font-size:14px}.setup-step span{display:block;color:hsl(var(--muted));font-size:12px;margin-top:3px}
+.setup-card .refresh-button{font-size:14px;padding:12px 16px}.setup-card #refreshStatus{min-height:22px;color:hsl(var(--muted));font-size:12px}
+.loading-card{text-align:center;width:min(100%,520px)}.loading-spinner{width:38px;height:38px;margin:0 auto 18px;border:3px solid hsl(var(--shade));border-top-color:hsl(var(--accent));border-radius:50%;animation:organizer-spin .8s linear infinite}
+.loading-card h1{font-size:22px;margin:0}.loading-card p{color:hsl(var(--muted));font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+@keyframes organizer-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.loading-spinner{animation:none;border-top-color:hsl(var(--accent));border-right-color:hsl(var(--accent))}}
+</style></head><body><div id="app"></div><script>const DATA = {"snapshotDate":"Ainda nao atualizado","courses":[],"assessments":[],"totals":{"courses":0,"curricularCourses":0,"modules":0,"activities":0,"completed":0,"graded":0,"awaitingGrade":0,"check":0,"actions":0},"semester":null,"source":"Aguardando a primeira leitura do AVA"};
+const STORE_KEY = 'organizador-academico';
+(function runtime() {
+  const courses = (DATA.courses || []).filter(c => c.kind === 'disciplina');
+  const modules = courses.flatMap(course => (course.modules || []).map(module => ({ course, module })));
+  const assessments = DATA.assessments || [];
+  let selectedId = courses[0]?.id ?? null;
+  let currentView = 'home';
+  let taskFilter = modules.some(x => ['todo', 'check'].includes(x.module.statusKey)) ? 'actionable' : modules.some(x => x.module.statusKey === 'awaiting') ? 'awaiting' : 'all';
+  let query = '';
+  let showAllTasks = false;
+  let showAllGrades = false;
+  let scanMode = location.protocol === 'file:' ? 'idle' : 'checking';
+  let scanMessage = 'Verificando o organizador...';
+  let scanError = '';
+
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+  const isNumber = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
+  const number = value => isNumber(value) ? Number(value) : null;
+  const normalized = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').replace(/[^a-z0-9]+/g, ' ').trim();
+  const grade = value => isNumber(value) ? Number(value).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '—';
+  const pretty = course => {
+    const raw = String(course.name || course.displayName || 'Matéria').replace(/\s*[-–]?\s*T\d{2}[-–]\d{4}[-–]\d+$/i, '').replace(/\s+/g, ' ').trim();
+    let title = raw.toLocaleLowerCase('pt-BR').replace(/(^|[\s,])([\p{L}])/gu, (_, prefix, c) => prefix + c.toLocaleUpperCase('pt-BR'));
+    title = title.replace(/\b(e|de|da|do|das|dos|a|o|as|os|em|no|na|nos|nas|para|com)\b/gi, word => word.toLocaleLowerCase('pt-BR'));
+    title = title.replace(/\bii\b/gi, 'II').replace(/\bi\b/gi, 'I').replace(/\bvvt\b/gi, 'VVT');
+    return title;
+  };
+  const cohort = course => (String(course.displayName || '').match(/T\d{2}[-–]\d{4}[-–]\d+/i) || [])[0]?.replace(/[-–](\d+)$/, '/$1').replace('-', ' · ') || 'Turma';
+  const date = value => { if (!value) return 'Sem data capturada'; const d = new Date(value.length === 10 ? `${value}T12:00:00` : value); return Number.isNaN(d.getTime()) ? 'Sem data capturada' : d.toLocaleDateString('pt-BR'); };
+  const dueSort = value => value ? String(value) : '9999-12-31';
+  const selected = () => courses.find(c => String(c.id) === String(selectedId)) || courses[0];
+  const progress = course => { const list = course.modules || []; return { done: list.filter(m => m.completed === true).length, total: Number.isInteger(course.moduleCount) ? course.moduleCount : list.length }; };
+  const courseUrl = course => course.url || `https://ava.ufms.br/course/view.php?id=${encodeURIComponent(course.id)}`;
+  const gradeUrl = course => `https://ava.ufms.br/grade/report/user/index.php?id=${encodeURIComponent(course.id)}`;
+  const comparisonKey = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').replace(/[^a-z0-9]+/g, ' ').trim();
+  const assessmentFor = course => assessments.find(item => comparisonKey(item.course) === comparisonKey(course.name));
+  const checkoutSummary = course => {
+    const checkouts = (course.modules || []).filter(module => module.gradeExpected !== false);
+    const originalGrades = checkouts.map(module => number(module.grade));
+    const complete = checkouts.length > 0 && originalGrades.every(value => value !== null);
+    if (!complete) return { count: checkouts.length, graded: originalGrades.filter(value => value !== null).length, average: null, lowest: null, replacement: null, waitingOptionalGrade: false };
+
+    const lowestIndex = originalGrades.indexOf(Math.min(...originalGrades));
+    const lowest = originalGrades[lowestIndex];
+    const optionalGrade = number(course.optionalExamGrade);
+    const courseModules = course.modules || [];
+    const optionalApplicable = course.optionalExamCompleted === true && courseModules.length > 0 && courseModules.every(module => module.completed === true);
+    const waitingOptionalGrade = optionalApplicable && optionalGrade === null && lowest < 8;
+    const grades = [...originalGrades];
+    let replacement = null;
+    if (optionalApplicable && optionalGrade !== null && optionalGrade > lowest) {
+      grades[lowestIndex] = optionalGrade;
+      replacement = { module: checkouts[lowestIndex], originalGrade: lowest, grade: optionalGrade };
+    }
+    return {
+      count: checkouts.length,
+      graded: checkouts.length,
+      average: grades.reduce((sum, value) => sum + value, 0) / grades.length,
+      lowest,
+      replacement,
+      waitingOptionalGrade,
+    };
+  };
+  const finalAverage = course => {
+    const checkouts = checkoutSummary(course);
+    const examGrade = number(assessmentFor(course)?.grade);
+    if (checkouts.average === null || examGrade === null || checkouts.waitingOptionalGrade) return null;
+    return checkouts.average * 0.58 + examGrade * 0.42;
+  };
+  const courseAverageRange = course => {
+    const courseModules = course.modules || [];
+    const checkouts = courseModules.filter(module => module.gradeExpected !== false);
+    if (!checkouts.length) return null;
+
+    const grades = checkouts.map(module => number(module.grade));
+    const examGrade = number(assessmentFor(course)?.grade);
+    const allModulesCompleted = courseModules.length > 0 && courseModules.every(module => module.completed === true);
+    const optionalCompleted = course.optionalExamCompleted === true && allModulesCompleted;
+    const optionalGrade = number(course.optionalExamGrade);
+    const replaceLowest = (values, candidate) => {
+      if (candidate === null || !values.length) return values;
+      const lowest = Math.min(...values);
+      if (candidate > lowest) values[values.indexOf(lowest)] = candidate;
+      return values;
+    };
+    const lowGrades = replaceLowest(grades.map(value => value ?? 0), optionalCompleted ? optionalGrade : null);
+    const highGrades = replaceLowest(grades.map(value => value ?? 10), optionalCompleted ? (optionalGrade ?? 10) : null);
+    const average = values => values.reduce((sum, value) => sum + value, 0) / values.length;
+
+    return {
+      minimum: average(lowGrades) * 0.58 + (examGrade ?? 0) * 0.42,
+      maximum: average(highGrades) * 0.58 + (examGrade ?? 10) * 0.42,
+    };
+  };
+  const courseStanding = course => {
+    const score = finalAverage(course);
+    if (score !== null) return { state: score >= 6 ? 'approved' : 'low', minimum: score, maximum: score, exact: true };
+    const range = courseAverageRange(course);
+    if (!range) return null;
+    const state = range.minimum >= 6 ? 'approved' : range.maximum < 6 ? 'low' : 'wait';
+    return { ...range, state, exact: Math.abs(range.maximum - range.minimum) < 0.000001 };
+  };
+  const courseEvaluation = course => {
+    const checkouts = checkoutSummary(course);
+    const assessment = assessmentFor(course);
+    const examGrade = number(assessment?.grade);
+    const score = finalAverage(course);
+    const standing = courseStanding(course);
+    const scoreClass = standing?.state === 'approved' ? 'good' : standing?.state === 'low' ? 'low' : 'wait';
+    const baseScoreStatus = score === null
+      ? checkouts.waitingOptionalGrade ? 'Aguardando nota da prova optativa' : checkouts.average === null ? checkouts.count ? `Aguardando notas dos checkouts (${checkouts.graded}/${checkouts.count})` : 'Checkouts não identificados nesta leitura' : 'Aguardando nota da prova presencial'
+      : score >= 6 ? 'Atingiu a média mínima de 6,0' : 'Abaixo da média mínima de 6,0';
+    const scoreStatus = score !== null
+      ? baseScoreStatus
+      : standing?.state === 'approved'
+        ? `Aprovado pela média mesmo supondo zero nas notas pendentes (mínimo ${grade(standing.minimum)}).`
+        : standing?.state === 'low'
+          ? `Não atinge 6,0 nem supondo nota 10 nas pendentes (máximo ${grade(standing.maximum)}).`
+          : standing
+            ? `Em aberto: a média pode ficar entre ${grade(standing.minimum)} e ${grade(standing.maximum)}.`
+            : baseScoreStatus;
+    const scoreDisplay = score !== null
+      ? `${grade(score)} / 10`
+      : standing?.state === 'approved'
+        ? `≥${grade(standing.minimum)} / 10`
+        : standing?.state === 'low'
+          ? `≤${grade(standing.maximum)} / 10`
+          : standing
+            ? `${grade(standing.minimum)}–${grade(standing.maximum)} / 10`
+            : 'Aguardando dados';
+    const scoreHeading = score === null && standing
+      ? standing.state === 'approved' ? 'Média mínima se pendentes forem zero' : 'Faixa possível da média'
+      : 'Média final calculada';
+    const optionalStatus = course.optionalExamCompleted === true ? 'Feita; conclusão registrada no AVA' : course.optionalExamCompleted === false ? 'Pendente no AVA' : 'Não confirmada nesta leitura';
+    const optionalGrade = isNumber(course.optionalExamGrade) ? `Nota ${grade(course.optionalExamGrade)}` : 'Nota não identificada nesta leitura';
+    const presencialStatus = assessment ? `Nota ${grade(assessment.grade)}` : 'Não identificada nesta leitura';
+    const presencialLink = assessment?.reportCourseId ? `<a class="button-link" href="https://ava.ufms.br/grade/report/user/index.php?id=${encodeURIComponent(assessment.reportCourseId)}" target="_blank" rel="noopener">Ver boletim presencial</a>` : '';
+    const optionalLink = course.optionalExamUrl ? `<a class="button-link" href="${esc(course.optionalExamUrl)}" target="_blank" rel="noopener">Abrir prova optativa</a>` : '';
+    const checkoutDetail = checkouts.replacement
+      ? `A optativa substituiu o checkout M${checkouts.replacement.module.number}: ${grade(checkouts.replacement.originalGrade)} por ${grade(checkouts.replacement.grade)}.`
+      : checkouts.waitingOptionalGrade
+        ? 'A prova optativa consta como feita, mas a nota ainda não foi capturada; a média final aguarda esse dado.'
+        : checkouts.lowest !== null && checkouts.lowest < 8 && course.optionalExamCompleted !== true
+          ? `Menor checkout: ${grade(checkouts.lowest)}. Quando a optativa for concluída, a nota dela substituirá esse valor.`
+          : checkouts.count ? `${checkouts.graded} checkout(s) com nota capturada.` : 'Nenhum checkout foi capturado nesta leitura.';
+    return `<section class="panel" style="margin-top:10px"><div class="panel-head"><div><h3 style="margin:0;font-size:13px">Média e avaliações</h3><p>O cálculo usa as notas dos checkouts e da prova presencial capturadas no AVA.</p></div></div><div class="eval-grid"><article class="eval-card"><span>Prova optativa</span><strong>${esc(optionalStatus)}</strong><small>${esc(optionalGrade)}</small>${optionalLink}</article><article class="eval-card"><span>Prova presencial · peso 42%</span><strong>${esc(presencialStatus)}</strong><small>${assessment ? esc(assessment.title || 'Avaliação presencial registrada no boletim') : 'Nota ainda não identificada no boletim.'}</small>${presencialLink}</article><article class="eval-card"><span>Média dos checkouts · peso 58%</span><strong>${checkouts.average === null ? 'Aguardando notas' : `${grade(checkouts.average)} / 10`}</strong><small>${esc(checkoutDetail)}</small></article><article class="eval-card ${scoreClass}"><span>${esc(scoreHeading)}</span><strong>${scoreDisplay}</strong><small>${esc(score === null ? scoreStatus : `${grade(checkouts.average)} × 0,58 + ${grade(examGrade)} × 0,42`)}</small></article><article class="eval-card ${scoreClass}"><span>Situação pela média</span><strong>${esc(scoreStatus)}</strong><small>Nota mínima para aprovação: 6,0.</small></article></div><div class="eval-note">Média final = (média dos checkouts × 0,58) + (nota da prova presencial × 0,42). A média mínima é 6,0.</div><div class="eval-note">A prova optativa não é somada como uma avaliação extra: quando concluída e com nota maior que o menor checkout, substitui esse valor. Exemplo: 10, 10, 10 e 0; optativa 8 resulta em 10, 10, 10 e 8 antes da média.</div><div class="eval-sources"><a href="https://siscad.ufms.br/" target="_blank" rel="noopener">Conferir média e frequência no SISCAD</a><a href="https://boletimoficial.ufms.br/bse/publicacao?id=445057" target="_blank" rel="noopener">Regulamento de graduação, arts. 62 e 78–80</a></div></section>`;
+  };
+  const statusLabel = module => module.statusKey === 'awaiting' ? 'Aguardando nota' : module.statusKey === 'todo' ? 'Pendente no AVA' : module.statusKey === 'check' ? 'Conferir envio' : module.statusKey === 'locked' || module.locked ? 'Bloqueado no AVA' : isNumber(module.grade) ? 'Nota lançada' : module.completed === true ? 'Concluída no AVA' : 'Não identificado';
+  const statusStyle = module => module.statusKey === 'todo' ? 'low' : ['awaiting', 'check'].includes(module.statusKey) ? 'wait' : module.statusKey === 'locked' ? 'neutral' : '';
+  const submissionLabel = module => ({ enviado: 'Envio registrado', rascunho: 'Rascunho no AVA', nao_enviado: 'Nenhum envio registrado' }[module.submissionStatus] || 'Não confirmado pelo script');
+  const completionLabel = module => module.completionStatus === 'concluido' || module.completed === true ? 'Conclusão registrada no AVA' : module.completed === false ? 'Pendente no AVA' : 'Não identificada';
+  const evidenceField = (raw, label, nextLabels) => {
+    if (!raw) return '';
+    const start = raw.indexOf(label);
+    if (start < 0) return '';
+    const value = raw.slice(start + label.length).trim();
+    let end = value.length;
+    for (const next of nextLabels) { const i = value.indexOf(next); if (i >= 0 && i < end) end = i; }
+    return value.slice(0, end).trim().replace(/\s+/g, ' ');
+  };
+  const evidence = module => {
+    const raw = String(module.evidence || '');
+    return {
+      attempt: evidenceField(raw, 'Número da tentativa', ['Status de envio']),
+      submission: evidenceField(raw, 'Status de envio', ['Status da avaliação']),
+      evaluation: evidenceField(raw, 'Status da avaliação', ['Envios de arquivo']),
+      file: evidenceField(raw, 'Envios de arquivo', ['Nota', 'Condições de conclusão', 'Editar envio', 'Remover envio', 'Tempo restante', 'Última modificação', 'Feedback']),
+      evaluatedAt: evidenceField(raw, 'Avaliado em', ['Tentativas anteriores', 'Status de envio', 'Avaliado por']),
+      evaluator: evidenceField(raw, 'Avaliado por', ['Comentários de feedback']),
+      feedback: evidenceField(raw, 'Comentários de feedback', ['Condições de conclusão', 'Editar envio', 'Remover envio', 'Tempo restante', 'Última modificação', 'Feedback']),
+      modified: evidenceField(raw, 'Última modificação', ['Envios de arquivo', 'Feedback']),
+    };
+  };
+  const attemptInfo = module => {
+    const raw = evidence(module).attempt || String(module.evidence || '');
+    const match = raw.match(/(\d+)\s*\((\d+)\s*tentativas?/i);
+    if (match) {
+      const used = Number(match[1]);
+      const allowed = Number(match[2]);
+      const remaining = Math.max(0, allowed - used);
+      const remainingText = remaining === 0 ? 'sem tentativas restantes' : `${remaining} tentativa${remaining === 1 ? '' : 's'} restante${remaining === 1 ? '' : 's'}`;
+      return { used, allowed, remaining, label: `${used} de ${allowed} usadas · ${remainingText} segundo o limite do AVA` };
+    }
+    if (/tentativas? ilimitadas?/i.test(raw)) return { used: null, allowed: null, remaining: null, label: 'O AVA informa tentativas ilimitadas' };
+    return { used: null, allowed: null, remaining: null, label: 'Limite de tentativas não identificado nesta leitura' };
+  };
+  const optionalEligible = course => {
+    const list = course.modules || [];
+    const total = Number.isInteger(course.moduleCount) ? course.moduleCount : list.length;
+    if (!total || list.length < total || list.some(m => m.completed !== true) || course.optionalExamCompleted === true) return false;
+    const grades = list.map(m => number(m.grade));
+    return grades.length === list.length && grades.every(value => value !== null) && Math.min(...grades) < 8;
+  };
+  const optionalCourses = () => courses.filter(optionalEligible);
+  const actionable = () => modules.filter(x => ['todo', 'check'].includes(x.module.statusKey));
+  const waitingGrade = () => modules.filter(x => x.module.statusKey === 'awaiting');
+  const locked = () => modules.filter(x => x.module.statusKey === 'locked' || x.module.locked === true);
+  const taskItems = () => {
+    const list = taskFilter === 'actionable' ? actionable() : taskFilter === 'awaiting' ? waitingGrade() : taskFilter === 'locked' ? locked() : [...actionable(), ...waitingGrade(), ...locked()];
+    return list.sort((a, b) => dueSort(a.module.due).localeCompare(dueSort(b.module.due)));
+  };
+  const taskCount = filter => filter === 'actionable' ? actionable().length : filter === 'awaiting' ? waitingGrade().length : filter === 'locked' ? locked().length : actionable().length + waitingGrade().length + locked().length;
+  const metrics = () => `<section class="metrics"><article class="metric"><strong>${courses.length}</strong><span>matérias</span></article><article class="metric"><strong>${DATA.totals?.modules ?? modules.length}</strong><span>módulos listados no AVA</span></article><article class="metric alert"><strong>${waitingGrade().length}</strong><span>aguardando nota</span></article><article class="metric ${actionable().length ? 'todo' : ''}"><strong>${actionable().length}</strong><span>pendentes de envio ou conferência</span></article><article class="metric ${modules.filter(x => isNumber(x.module.grade) && Number(x.module.grade) < 10).length ? 'todo' : ''}"><strong>${modules.filter(x => isNumber(x.module.grade) && Number(x.module.grade) < 10).length}</strong><span>notas abaixo de 10</span></article></section>`;
+  const courseResult = course => {
+    const standing = courseStanding(course);
+    if (!standing) return `<span class="course-count" title="Sem dados suficientes para calcular a média">—</span>`;
+    const label = standing.state === 'approved' ? 'Aprovado' : standing.state === 'low' ? 'Abaixo de 6' : 'Em aberto';
+    const value = standing.exact
+      ? `Média ${grade(standing.minimum)}`
+      : standing.state === 'approved'
+        ? `Mín. ${grade(standing.minimum)}`
+        : standing.state === 'low'
+          ? `Máx. ${grade(standing.maximum)}`
+          : `${grade(standing.minimum)}–${grade(standing.maximum)}`;
+    const title = standing.exact
+      ? `Média calculada com as notas capturadas: ${grade(standing.minimum)}.`
+      : standing.state === 'approved'
+        ? `Projeção conservadora: mesmo atribuindo zero às notas ainda não lançadas, a média fica em ${grade(standing.minimum)} ou mais.`
+        : standing.state === 'low'
+          ? `Mesmo atribuindo nota 10 às avaliações sem nota, a média máxima seria ${grade(standing.maximum)}.`
+          : `A média depende das notas pendentes; a faixa possível é de ${grade(standing.minimum)} a ${grade(standing.maximum)}.`;
+    return `<span class="course-count ${standing.state}" title="${esc(title)}"><strong>${label}</strong><small>${value}</small></span>`;
+  };
+  const sidebarCourses = () => {
+    const terms = normalized(query).split(/\s+/).filter(Boolean);
+    const list = courses.filter(c => {
+      if (!terms.length) return true;
+      const searchable = normalized([c.name, c.displayName, pretty(c), c.id, cohort(c), ...(c.modules || []).map(m => m.title)].join(' '));
+      return terms.every(term => searchable.includes(term));
+    });
+    return list.map(c => { const p = progress(c); return `<button class="course-link ${String(c.id) === String(selectedId) ? 'active' : ''}" data-course="${esc(c.id)}"><span><strong title="${esc(pretty(c))}">${esc(pretty(c))}</strong><small>${p.total} módulos</small></span>${courseResult(c)}</button>`; }).join('') || `<div class="empty">Nenhuma matéria corresponde à busca.</div>`;
+  };
+  const nav = () => `<aside class="sidebar"><div class="brand"><small>UFMS · ${esc(DATA.semester || 'Semestre atual')}</small><strong>Organizador acadêmico</strong></div><nav class="nav"><button data-view="home" class="${currentView === 'home' ? 'active' : ''}">Visão geral</button><button data-view="course" class="${currentView === 'course' ? 'active' : ''}">Matéria selecionada</button><button data-view="grades" class="${currentView === 'grades' ? 'active' : ''}">Notas</button><button data-view="assessments" class="${currentView === 'assessments' ? 'active' : ''}">Provas presenciais <span class="course-count">${assessments.length}</span></button></nav><div class="side-label"><span>Matérias</span><span>${courses.length}</span></div><div class="search-wrap"><input id="courseSearch" class="search" type="search" placeholder="Buscar por nome, módulo ou turma" value="${esc(query)}" aria-label="Buscar matéria ou módulo"><button class="search-clear" data-clear-search title="Limpar busca" aria-label="Limpar busca">Limpar</button></div><div class="course-list" id="courseList">${sidebarCourses()}</div></aside>`;
+  const heading = (title, subtitle) => `<header class="top"><div><div class="eyebrow">UFMS · ${esc(DATA.semester || 'Semestre atual')}</div><h1>${title}</h1><p>${subtitle}</p><div class="snapshot">Última leitura: ${esc(DATA.snapshotDate || 'data não identificada')}</div></div><div class="header-actions"><button class="refresh-button" id="refreshButton">Atualizar dados do AVA</button><span class="refresh-status" id="refreshStatus" role="status">Leitura local · nada é enviado ao AVA</span></div></header>`;
+  const ring = () => {
+    const total = Number(DATA.totals?.modules) || modules.length;
+    const done = Number(DATA.totals?.completed) || modules.filter(x => x.module.completed === true).length;
+    const pct = total ? Math.round(100 * done / total) : 0;
+    return `<div class="completion"><div class="ring" style="--pct:${pct}%"><strong>${pct}%</strong></div><div class="completion-text"><strong>${done} de ${total} conclusões registradas</strong><small>A conclusão do AVA não confirma, sozinha, envio ou nota. Esses estados aparecem separadamente no módulo.</small></div></div><div class="summary-row"><span>Notas lançadas</span><b>${DATA.totals?.graded ?? modules.filter(x => isNumber(x.module.grade)).length}</b></div><div class="summary-row"><span>Aguardando nota</span><b>${waitingGrade().length}</b></div><div class="summary-row"><span>Pendentes de envio/conferência</span><b>${actionable().length}</b></div>`;
+  };
+  const actionRow = ({ course, module }) => {
+    const submission = evidence(module).submission || submissionLabel(module);
+    return `<article class="action-row"><span class="pill ${statusStyle(module)}">${esc(statusLabel(module))}</span><div class="action-main"><strong>${esc(pretty(course))} · M${esc(module.number)} — ${esc(String(module.title || 'Atividade').replace(/\s+Tarefa$/i, ''))}</strong><small>Prazo ${date(module.due)} · ${esc(submission)}</small></div><a class="action-open" href="${esc(module.url || courseUrl(course))}" target="_blank" rel="noopener">Abrir AVA</a></article>`;
+  };
+  const taskPanel = () => {
+    const list = taskItems();
+    const shown = showAllTasks ? list : list.slice(0, 5);
+    const tabs = [['actionable', `Enviar/conferir (${actionable().length})`], ['awaiting', `Aguardando nota (${waitingGrade().length})`], ['locked', `Bloqueadas (${locked().length})`], ['all', `Tudo (${taskCount('all')})`]];
+    const empty = taskFilter === 'actionable' ? `Sem atividade pendente de envio nesta leitura. ${waitingGrade().length ? `<br>${waitingGrade().length} atividade(s) foram enviadas e aguardam nota.` : ''}<br><button class="quiet-button" data-filter="awaiting">Ver aguardando nota</button>` : taskFilter === 'awaiting' ? 'Nenhuma nota aguardando correção neste retrato.' : taskFilter === 'locked' ? 'Nenhuma atividade bloqueada foi identificada.' : 'Nenhuma atividade pendente foi capturada.';
+    return `<section class="panel"><div class="panel-head"><div><h2>Acompanhar</h2><p>Envio e correção aparecem como etapas diferentes.</p></div><span class="count">${list.length} registro(s)</span></div><div class="tabs">${tabs.map(([id, label]) => `<button data-filter="${id}" class="${taskFilter === id ? 'active' : ''}">${label}</button>`).join('')}</div><div class="actions-list">${shown.length ? shown.map(actionRow).join('') : `<div class="empty">${empty}</div>`}</div>${list.length > 5 ? `<button class="more-button" data-more-tasks>${showAllTasks ? 'Mostrar menos' : `Ver os ${list.length - 5} registros restantes`}</button>` : ''}</section>`;
+  };
+  const gradeBars = (limit = Infinity) => {
+    const list = courses.map(course => ({ course, value: finalAverage(course) })).filter(item => item.value !== null).sort((a, b) => a.value - b.value);
+    return list.slice(0, limit).map(({ course, value }) => { const boundedValue = Math.max(0, Math.min(10, value)); return `<div class="chart-row"><button data-course="${esc(course.id)}" title="Abrir ${esc(pretty(course))}">${esc(pretty(course))}</button><div class="bar"><i class="${value < 6 ? 'low' : ''}" style="width:${boundedValue * 10}%"></i></div><span class="chart-score">${grade(value)}</span></div>`; }).join('') || `<div class="empty">A média final aparecerá quando as notas dos checkouts e da prova presencial estiverem capturadas.</div>`;
+  };
+  const improvementPanel = () => {
+    const rows = modules.filter(x => isNumber(x.module.grade) && Number(x.module.grade) < 10)
+      .sort((a, b) => Number(a.module.grade) - Number(b.module.grade) || pretty(a.course).localeCompare(pretty(b.course), 'pt-BR') || Number(a.module.number) - Number(b.module.number));
+    const low = rows.filter(x => Number(x.module.grade) < 7);
+    const visible = showAllGrades ? rows : low;
+    const available = rows.filter(({ module }) => attemptInfo(module).remaining > 0);
+    const exhausted = rows.filter(({ module }) => attemptInfo(module).remaining === 0);
+    const unknown = rows.filter(({ module }) => attemptInfo(module).remaining === null);
+    const remainingTotal = available.reduce((sum, { module }) => sum + attemptInfo(module).remaining, 0);
+    const remainingDescription = remainingTotal
+      ? `${remainingTotal} tentativa${remainingTotal === 1 ? '' : 's'} restante${remainingTotal === 1 ? '' : 's'} somada${remainingTotal === 1 ? '' : 's'} em ${available.length} atividade${available.length === 1 ? '' : 's'}`
+      : 'Nenhuma tentativa restante no limite capturado para estas notas';
+    const renderGroup = (title, description, groupRows, className) => {
+      const groupVisible = visible.filter(item => groupRows.includes(item));
+      const content = groupVisible.length
+        ? groupVisible.map(({ course, module }) => {
+          const attempt = attemptInfo(module);
+          const replacement = checkoutSummary(course).replacement;
+          const substituted = replacement && String(replacement.module.activityId) === String(module.activityId);
+          const attemptClass = attempt.remaining > 0 ? 'available' : attempt.remaining === 0 ? 'exhausted' : 'unknown';
+          const attemptLabel = attempt.used !== null && attempt.allowed !== null
+            ? `${attempt.used}/${attempt.allowed} usadas${attempt.remaining > 0 ? ` · ${attempt.remaining} restante${attempt.remaining === 1 ? '' : 's'} no limite` : ''}`
+            : attempt.label;
+          const actionLabel = attempt.remaining === 0 ? 'Ver correção' : attempt.remaining > 0 ? 'Conferir tarefa' : 'Ver tarefa';
+          return `<article class="grade-row"><span class="grade-number">${grade(module.grade)}</span><div><strong>${esc(pretty(course))} · M${esc(module.number)}</strong><small>${esc(String(module.title || 'Atividade').replace(/\s+Tarefa$/i, ''))}</small><div class="grade-attempt ${attemptClass}">${esc(attemptLabel)}</div>${substituted ? `<div class="grade-attempt unknown">Na média, a optativa considera ${grade(replacement.grade)} no lugar desta nota.</div>` : ''}</div><a class="action-open" href="${esc(module.url || courseUrl(course))}" target="_blank" rel="noopener">${actionLabel}</a></article>`;
+        }).join('')
+        : groupRows.length
+          ? `<div class="empty">As notas de 7 a 9,9 desta seção estão ocultas. Use “Mostrar também” abaixo para vê-las.</div>`
+          : `<div class="empty">Nenhuma nota nesta categoria.</div>`;
+      return `<section class="grade-group ${className}"><div class="grade-group-head"><div><h3>${title}</h3><p>${description}</p></div><span class="count">${groupVisible.length}/${groupRows.length} exibidas</span></div><div class="grade-queue">${content}</div></section>`;
+    };
+    return `<section class="panel"><div class="panel-head"><div><h2>Notas abaixo de 10</h2><p>Agrupadas pelo limite de tentativas; dentro de cada seção, da menor para a maior.</p></div><span class="count">${rows.length} notas</span></div><div class="attempt-summary"><article><strong>${available.length}</strong><span>com tentativa no limite do AVA</span></article><article class="exhausted"><strong>${exhausted.length}</strong><span>sem tentativas restantes no limite</span></article><article class="unknown"><strong>${unknown.length}</strong><span>limite não identificado</span></article></div><p class="attempt-note">${remainingDescription}. Uma tentativa restante no limite não garante que o prazo ou o reenvio estejam abertos.</p><div class="grade-groups">${available.length ? renderGroup('Pode haver tentativa restante', 'Confira o prazo e se a tarefa ainda permite novo envio.', available, 'grade-group-available') : ''}${unknown.length ? renderGroup('Limite não identificado', 'O painel não capturou o limite de tentativas.', unknown, 'grade-group-unknown') : ''}${exhausted.length ? renderGroup('Sem tentativas restantes', 'O limite registrado pelo AVA foi usado; estas notas ficam para consulta.', exhausted, 'grade-group-exhausted') : ''}</div>${rows.length > low.length ? `<button class="more-button" data-more-grades>${showAllGrades ? 'Mostrar somente abaixo de 7' : `Mostrar também notas de 7 a 9,9 (${rows.length - low.length})`}</button>` : ''}</section>`;
+  };
+  const homeView = () => {
+    const title = heading('Visão geral', 'Um resumo curto do que foi registrado no AVA.');
+    const eligible = optionalCourses();
+    return `${title}${metrics()}<div class="home-grid"><div class="stack">${taskPanel()}${eligible.length ? optionalPanel() : ''}</div><div class="stack"><section class="panel"><div class="panel-head"><div><h2>Conclusão dos módulos</h2><p>Indicador de conclusão capturado no AVA.</p></div></div>${ring()}</section><section class="panel"><div class="panel-head"><div><h2>Notas por matéria</h2><p>Prévia; abra Notas para ver todos os resultados.</p></div><button class="quiet-button" data-view="grades">Ver notas</button></div><div class="chart-list">${gradeBars(5)}</div></section></div></div><p class="footer-note">O retrato não substitui a conferência no AVA. Status ausente significa “não confirmado pelo script”.</p>`;
+  };
+  const evidenceDetails = module => {
+    const e = evidence(module);
+    const attempt = attemptInfo(module);
+    const submission = e.submission || submissionLabel(module);
+    const evaluation = isNumber(module.grade) ? `${grade(module.grade)} / 10` : module.gradeExpected === false ? 'Não se aplica' : e.evaluation || 'Aguardando nota';
+    const metadata = [['Arquivo enviado', e.file], ['Avaliado em', e.evaluatedAt], ['Avaliado por', e.evaluator], ['Última modificação', e.modified]].filter(([, value]) => value);
+    const file = metadata.find(([label]) => label === 'Arquivo enviado');
+    const evaluationMetadata = metadata.filter(([label]) => label !== 'Arquivo enviado');
+    const feedbackText = e.feedback ? e.feedback.slice(0, 2200) : '';
+    const feedback = feedbackText
+      ? `<blockquote class="teacher-feedback"><strong>Comentário da avaliação</strong><p>${esc(feedbackText)}${e.feedback.length > feedbackText.length ? '…' : ''}</p></blockquote>`
+      : `<div class="feedback-empty">Nenhum comentário do professor foi capturado nesta leitura.</div>`;
+    if (!submission && !evaluation && !metadata.length && !feedbackText && !module.evidence) return '';
+    return `<details><summary>Envio e avaliação</summary><div class="evidence-content"><div class="evidence-lead"><div><span class="evidence-label">Status do envio</span><strong class="evidence-status-value">${esc(submission || 'Não identificado nesta leitura')}</strong></div><div class="evidence-grade"><span class="evidence-label">Nota</span><strong>${esc(evaluation || 'Não identificada')}</strong></div></div><div class="evidence-attempt"><span>Tentativas no AVA</span><strong>${esc(attempt.label)}</strong></div>${file ? `<div class="evidence-file"><span>Arquivo enviado</span><strong>${esc(file[1])}</strong></div>` : ''}${evaluationMetadata.length ? `<div class="evidence-meta-grid">${evaluationMetadata.map(([label, value]) => `<article class="evidence-meta-item"><span>${label}</span><strong>${esc(value)}</strong></article>`).join('')}</div>` : ''}${feedback}${module.readError ? `<p class="evidence-read-error">Leitura do AVA: ${esc(module.readError)}</p>` : ''}</div></details>`;
+  };
+  const materialsDetails = module => {
+    const materials = module.materials || [];
+    if (!materials.length) return '';
+    const units = new Map();
+    for (const item of materials) {
+      const key = item.sectionTitle || 'Conteúdo do módulo';
+      if (!units.has(key)) units.set(key, []);
+      units.get(key).push(item);
+    }
+    return `<details><summary>Unidades e materiais (${materials.length})</summary>${[...units].map(([title, items]) => `<div class="unit"><h4>${esc(title)}</h4>${items.map(item => `<div class="material"><span>${item.completed === true ? '✓ Feito' : item.locked ? 'Bloqueado' : item.completed === false ? 'Pendente' : 'Status não identificado'} · ${esc(item.title.replace(/^[^A-Za-zÀ-ÿ]+\s*/, '').replace(/^(Videoaula Obrigatória|Videoaula Complementar|Slide da Videoaula Obrigatória|Slide)\s*/i, '').trim())}</span>${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noopener">Abrir</a>` : ''}</div>`).join('')}</div>`).join('')}</details>`;
+  };
+  const moduleItem = module => {
+    const title = String(module.title || 'Atividade avaliada').replace(/\s+Tarefa$/i, '').trim();
+    const replacement = checkoutSummary(selected()).replacement;
+    const substituted = replacement && String(replacement.module.activityId) === String(module.activityId);
+    const gradeValue = substituted ? `${grade(replacement.grade)}*` : module.gradeExpected === false ? 'Não se aplica' : isNumber(module.grade) ? grade(module.grade) : module.statusKey === 'awaiting' ? 'Aguardando' : 'Sem nota';
+    const replacementNote = substituted ? `<div class="eval-note" style="margin-top:8px">No cálculo da média, a nota da prova optativa (${grade(replacement.grade)}) substitui a nota original deste checkout (${grade(replacement.originalGrade)}). A nota registrada no AVA permanece ${grade(replacement.originalGrade)}.</div>` : '';
+    return `<details class="module"><summary><span class="module-line"><span class="module-title"><strong>Módulo ${esc(module.number)} · ${esc(title)}</strong><small>${date(module.due)} · ${esc(statusLabel(module))}</small></span><span class="pill ${statusStyle(module)}">${esc(statusLabel(module))}</span><b class="module-grade">${gradeValue}</b></span></summary><div class="module-body"><div class="facts"><div class="fact"><span>Prazo</span><b>${date(module.due)}</b></div><div class="fact"><span>Envio</span><b>${esc(evidence(module).submission || submissionLabel(module))}</b></div><div class="fact"><span>Conclusão</span><b>${esc(completionLabel(module))}</b></div><div class="fact"><span>Nota no AVA</span><b>${module.gradeExpected === false ? 'Não se aplica' : isNumber(module.grade) ? `${grade(module.grade)} lançada` : 'Aguardando lançamento'}</b></div></div>${replacementNote}${module.locked ? `<div class="empty" style="margin-top:7px">O AVA marcou esta atividade como bloqueada. Veja os requisitos no próprio curso.</div>` : ''}<div class="module-details">${module.instruction ? `<details><summary>Orientações completas da atividade</summary><p>${esc(module.instruction)}</p></details>` : ''}${evidenceDetails(module)}${materialsDetails(module)}</div><div class="course-actions" style="margin-top:8px"><a class="button-link" href="${esc(module.url || selected().url)}" target="_blank" rel="noopener">Abrir atividade no AVA</a>${module.moduleSectionUrl ? `<a class="button-link" href="${esc(module.moduleSectionUrl)}" target="_blank" rel="noopener">Abrir módulo no AVA</a>` : ''}</div>${module.localFolder || module.action?.source ? `<div class="folder-path">Pasta local: ${esc(module.localFolder || module.action.source)}</div>` : ''}</div></details>`;
+  };
+  const courseView = () => {
+    const course = selected();
+    if (!course) return `<div class="empty">Nenhuma matéria disponível neste retrato.</div>`;
+    const p = progress(course);
+    const list = course.modules || [];
+    const title = heading('Matéria selecionada', 'Provas, nota atual e situação registrada.');
+    return `${title}<section class="panel"><div class="course-head"><div><h2>${esc(pretty(course))}</h2><p>${esc(cohort(course))} · ${p.total} módulos · ${p.done} concluídos no AVA</p></div><div class="course-actions"><a class="button-link" href="${esc(courseUrl(course))}" target="_blank" rel="noopener">Abrir matéria no AVA</a><a class="button-link" href="${esc(gradeUrl(course))}" target="_blank" rel="noopener">Ver boletim do curso</a></div></div>${courseEvaluation(course)}<p class="small-note" style="margin:12px 2px 6px">Módulos · abra um para ver prazo, envio e conteúdo</p><div class="module-list">${list.length ? list.map(moduleItem).join('') : `<div class="empty">Nenhum módulo capturado para esta matéria.</div>`}</div></section>`;
+  };
+  const moduleGrades = () => {
+    const rows = modules.filter(x => isNumber(x.module.grade) && Number(x.module.grade) < 10).sort((a, b) => Number(a.module.grade) - Number(b.module.grade) || pretty(a.course).localeCompare(pretty(b.course), 'pt-BR') || Number(a.module.number) - Number(b.module.number));
+    const low = rows.filter(x => Number(x.module.grade) < 7);
+    const visible = showAllGrades ? rows : low;
+    return `<div class="actions-list">${visible.length ? visible.map(({ course, module }) => {
+      const replacement = checkoutSummary(course).replacement;
+      const substituted = replacement && String(replacement.module.activityId) === String(module.activityId);
+      return `<article class="grade-row"><span class="grade-number">${grade(module.grade)}</span><div><strong>${esc(pretty(course))} · M${esc(module.number)}</strong><small>${esc(String(module.title || 'Atividade').replace(/\s+Tarefa$/i, ''))}</small>${substituted ? `<small>Na média final, a optativa substitui esta nota por ${grade(replacement.grade)}.</small>` : ''}</div><a class="action-open" href="${esc(module.url || courseUrl(course))}" target="_blank" rel="noopener">Abrir</a></article>`;
+    }).join('') : `<div class="empty">Não há nota abaixo de 7 neste retrato.</div>`}</div>${rows.length > low.length ? `<button class="more-button" data-more-grades>${showAllGrades ? 'Mostrar somente abaixo de 7' : `Mostrar também notas de 7 a 9,9 (${rows.length - low.length})`}</button>` : ''}`;
+  };
+  const gradesView = () => `${heading('Notas', 'Notas lançadas, média calculada e avaliações pendentes.')}${metrics()}<div class="section-space"><section class="panel"><div class="panel-head"><div><h2>Média final por matéria</h2><p>(média dos checkouts × 0,58) + (prova presencial × 0,42). Mínimo: 6,0.</p></div><span class="count">${courses.filter(c => finalAverage(c) !== null).length} calculadas</span></div><div class="chart-list">${gradeBars()}</div></section><section class="panel"><div class="panel-head"><div><h2>Notas de módulo para acompanhar</h2><p>Ordenadas da menor para a maior; notas 10 ficam ocultas.</p></div><span class="count">${modules.filter(x => isNumber(x.module.grade) && Number(x.module.grade) < 7).length} abaixo de 7</span></div>${moduleGrades()}</section><section class="panel"><div class="panel-head"><div><h2>Notas aguardando lançamento</h2><p>O script identificou envio/conclusão, mas ainda não encontrou nota do professor.</p></div><span class="count">${waitingGrade().length}</span></div><div class="actions-list">${waitingGrade().map(actionRow).join('') || `<div class="empty">Nenhuma nota aguardando lançamento.</div>`}</div></section></div>`;
+  const optionalPanel = () => {
+    const list = optionalCourses();
+    if (!list.length) return '';
+    return `<section class="panel optional-card"><div class="panel-head"><div><h2>Prova optativa disponível</h2><p>Disponível após concluir todos os módulos quando a menor nota for inferior a 8; substitui a menor nota de checkout.</p></div></div>${list.map(c => { const summary = checkoutSummary(c); const lowestModule = (c.modules || []).find(module => Number(module.grade) === summary.lowest); return `<article class="action-row"><span class="pill wait">${c.optionalExamCompleted === false ? 'Pendente no AVA' : 'Não confirmada'}</span><div class="action-main"><strong>${esc(pretty(c))}</strong><small>Menor checkout: ${grade(summary.lowest)}${lowestModule ? ` · M${esc(lowestModule.number)}` : ''} · prazo ${date(c.optionalExamDue)}</small></div>${c.optionalExamUrl ? `<a class="action-open" href="${esc(c.optionalExamUrl)}" target="_blank" rel="noopener">Abrir prova</a>` : ''}</article>`; }).join('')}</section>`;
+  };
+  const assessmentsView = () => `${heading('Provas presenciais', 'Resultados capturados no boletim de avaliações presenciais.')}${optionalPanel()}<section class="panel"><div class="panel-head"><div><h2>Notas presenciais</h2><p>Os dados abaixo vêm do boletim do AVA; abra o boletim para conferir a fonte.</p></div><a class="button-link" href="https://ava.ufms.br/grade/report/user/index.php?id=${encodeURIComponent(assessments[0]?.reportCourseId || '')}" target="_blank" rel="noopener">Abrir boletim no AVA</a></div>${assessments.length ? `<div class="assessment-grid">${assessments.map(a => `<article class="assessment"><div><strong>${esc(String(a.course || '').toLocaleLowerCase('pt-BR').replace(/^\p{L}/u, c => c.toLocaleUpperCase('pt-BR')))}</strong><small>${esc(a.title || 'Prova presencial')}</small></div><b>${grade(a.grade)}</b></article>`).join('')}</div>` : `<div class="empty">Nenhuma nota presencial foi capturada.</div>`}</section>`;
+  const viewHtml = () => currentView === 'course' ? courseView() : currentView === 'grades' ? gradesView() : currentView === 'assessments' ? assessmentsView() : homeView();
+
+  function setupScreen() {
+    const fileNotice = location.protocol === 'file:' ? 'Abra o arquivo 2_abrir_organizador.vbs para ativar a leitura do AVA.' : 'A leitura consulta o AVA e não envia nem altera atividades.';
+    return `<main class="setup-screen"><section class="setup-card"><p class="eyebrow">PRIMEIRO ACESSO</p><h1>Vamos carregar suas matérias</h1><p>O painel ainda não tem dados do AVA. Faça a primeira leitura para montar a lista de cursos, módulos, atividades, prazos e notas.</p><div class="setup-steps"><div class="setup-step"><b>1</b><div><strong>Entre no AVA</strong><span>Se a sessão tiver expirado, o navegador vai pedir seu login.</span></div></div><div class="setup-step"><b>2</b><div><strong>Aguarde a leitura</strong><span>O painel mostra o andamento; os dados aparecem quando ela terminar.</span></div></div><div class="setup-step"><b>3</b><div><strong>Organize seus arquivos</strong><span>Depois, você poderá criar uma pasta para cada matéria e módulo.</span></div></div></div><button class="refresh-button" id="refreshButton" type="button" ${location.protocol === 'file:' ? 'disabled' : ''}>Buscar dados do AVA</button><p id="refreshStatus" role="status">${esc(scanError || fileNotice)}</p></section></main>`;
+  }
+
+  function loadingScreen(message) {
+    return `<main class="loading-screen"><section class="loading-card" role="status" aria-live="polite"><div class="loading-spinner" aria-hidden="true"></div><h1>Lendo seus dados do AVA</h1><p data-loading-message>${esc(message || 'Aguarde enquanto o organizador busca matérias, atividades, prazos e notas.')}</p><p>Os dados anteriores ficam ocultos durante a leitura. O painel será atualizado quando ela terminar.</p></section></main>`;
+  }
+
+  function render() {
+    const app = document.getElementById('app');
+    if (scanMode === 'checking' || scanMode === 'running') {
+      app.innerHTML = loadingScreen(scanMessage);
+      return;
+    }
+    if (!courses.length) {
+      app.innerHTML = setupScreen();
+      bindRefreshButton();
+      return;
+    }
+    app.innerHTML = `<div class="app">${nav()}<main class="main"><div id="viewContent">${viewHtml()}</div><p class="footer-note">Informações locais do retrato de ${esc(DATA.snapshotDate || 'data não identificada')}. Os links abrem o AVA; nenhuma atividade é enviada por esta prévia.</p></main></div>`;
+    document.querySelectorAll('.module-details > details').forEach(detail => {
+      const label = detail.querySelector('summary')?.textContent.trim() || '';
+      if (label.startsWith('Orientações')) detail.classList.add('detail-instruction');
+      if (label.startsWith('Evidência') || label.startsWith('Envio, tentativas') || label.startsWith('Envio e avaliação')) detail.classList.add('detail-evidence');
+      if (label.startsWith('Unidades')) detail.classList.add('detail-materials');
+    });
+    if (currentView === 'home') document.querySelector('.home-grid > .stack:last-child')?.insertAdjacentHTML('beforeend', improvementPanel());
+    document.querySelectorAll('.folder-path').forEach(element => {
+      const folder = element.textContent.replace(/^Pasta local:\s*/i, '').trim();
+      const button = document.createElement('button');
+      button.className = 'button-link';
+      button.type = 'button';
+      button.textContent = 'Abrir pasta';
+      element.append(document.createTextNode(' '), button);
+      button.addEventListener('click', async () => {
+        button.disabled = true;
+        try {
+          const response = await fetch('/api/open-folder', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ folder }) });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Não foi possível abrir a pasta.');
+          const status = document.getElementById('refreshStatus');
+          if (status) status.textContent = 'Pasta aberta no Explorador de Arquivos.';
+        } catch (error) {
+          button.disabled = false;
+          const status = document.getElementById('refreshStatus');
+          if (status) status.textContent = error.message;
+        }
+      });
+    });
+    bind();
+  }
+  function bindCourseButtons() {
+    document.querySelectorAll('[data-course]').forEach(button => button.addEventListener('click', () => {
+      selectedId = button.dataset.course;
+      currentView = 'course';
+      const course = courses.find(item => String(item.id) === String(selectedId));
+      const moduleMatch = (course?.modules || []).find(module => normalized(module.title).includes(normalized(query)) && normalized(query));
+      render();
+      if (moduleMatch) window.setTimeout(() => {
+        const moduleTitle = String(moduleMatch.title || '').replace(/\s+Tarefa$/i, '').trim();
+        const card = [...document.querySelectorAll('.module')].find(item => normalized(item.querySelector('summary')?.textContent).includes(normalized(moduleTitle)));
+        if (card) { card.open = true; card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      }, 0);
+    }));
+  }
+  function bindRefreshButton() {
+    document.getElementById('refreshButton')?.addEventListener('click', startScan);
+  }
+
+  async function pollScan() {
+    while (true) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await fetch('/api/status', { cache: 'no-store' });
+      const state = await response.json();
+      if (state.running) {
+        const latest = String(state.output || '').trim().split(/\r?\n/).filter(Boolean).at(-1);
+        scanMessage = latest || 'Lendo cursos, atividades e notas no AVA…';
+        render();
+        continue;
+      }
+      if (state.exitCode === 0) {
+        scanMessage = 'Leitura concluída. Abrindo seus dados…';
+        render();
+        window.setTimeout(() => window.location.reload(), 700);
+        return;
+      }
+      throw new Error(String(state.output || '').trim().slice(-500) || 'A leitura terminou com erro. Confira o login no AVA e tente novamente.');
+    }
+  }
+
+  async function startScan() {
+    scanMode = 'running';
+    scanMessage = 'Conectando ao AVA...';
+    scanError = '';
+    render();
+    try {
+      const started = await fetch('/api/scan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+      const startBody = await started.json();
+      if (!started.ok) throw new Error(startBody.error || 'Não foi possível iniciar a leitura.');
+      scanMessage = startBody.alreadyRunning ? 'A leitura do AVA já está em andamento…' : 'Lendo cursos, atividades e notas no AVA…';
+      render();
+      await pollScan();
+    } catch (error) {
+      scanMode = 'idle';
+      scanError = error.message || 'Falha ao atualizar. Confira se o organizador está aberto.';
+      render();
+      const status = document.getElementById('refreshStatus');
+      if (status) status.textContent = scanError;
+    }
+  }
+
+  async function checkScanOnLoad() {
+    try {
+      const response = await fetch('/api/status', { cache: 'no-store' });
+      const state = await response.json();
+      if (state.running) {
+        scanMode = 'running';
+        scanMessage = 'Uma leitura do AVA já está em andamento…';
+        render();
+        await pollScan();
+        return;
+      }
+    } catch {}
+    scanMode = 'idle';
+    render();
+  }
+
+  function bind() {
+    document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => { currentView = button.dataset.view; render(); }));
+    bindCourseButtons();
+    const search = document.getElementById('courseSearch');
+    search?.addEventListener('input', event => {
+      query = event.target.value;
+      document.getElementById('courseList').innerHTML = sidebarCourses();
+      bindCourseButtons();
+    });
+    search?.addEventListener('keydown', event => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      document.querySelector('#courseList [data-course]')?.click();
+    });
+    document.querySelector('[data-clear-search]')?.addEventListener('click', () => { query = ''; render(); document.getElementById('courseSearch')?.focus(); });
+    bindRefreshButton();
+    document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => { taskFilter = button.dataset.filter; showAllTasks = false; render(); }));
+    document.querySelectorAll('[data-more-tasks]').forEach(button => button.addEventListener('click', () => { showAllTasks = !showAllTasks; render(); }));
+    document.querySelectorAll('[data-more-grades]').forEach(button => button.addEventListener('click', () => { showAllGrades = !showAllGrades; render(); }));
+  }
+  render();
+  if (scanMode === 'checking') checkScanOnLoad();
+})();</script></body></html>

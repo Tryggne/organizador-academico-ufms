@@ -1,0 +1,12 @@
+{
+  "name": "organizador-academico-ufms",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Painel local para acompanhar cursos, atividades, prazos e notas do AVA UFMS.",
+  "scripts": {
+    "install-browser": "playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.62.0"
+  }
+}
