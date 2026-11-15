@@ -267,17 +267,28 @@ const server = http.createServer((req, res) => {
         return;
       }
 
-      if (process.platform !== 'win32') {
-        json(res, 501, { error: 'A abertura no Explorador de Arquivos está disponível no Windows.' });
+      let opener;
+      let openerArgs;
+      if (process.platform === 'win32') {
+        opener = path.join(process.env.WINDIR || 'C:\\Windows', 'explorer.exe');
+        openerArgs = ['/n,', folderPath];
+      } else if (process.platform === 'darwin') {
+        opener = '/usr/bin/open';
+        openerArgs = [folderPath];
+      } else if (process.platform === 'linux') {
+        opener = 'xdg-open';
+        openerArgs = [folderPath];
+      } else {
+        json(res, 501, { error: 'Não reconheço o aplicativo de pastas deste sistema.' });
         return;
       }
 
-      const explorerPath = path.join(process.env.WINDIR || 'C:\\Windows', 'explorer.exe');
-      const explorer = spawn(explorerPath, ['/n,', folderPath], {
+      const explorer = spawn(opener, openerArgs, {
         stdio: 'ignore',
+        detached: true,
       });
       explorer.once('error', error => {
-        json(res, 500, { error: `Não consegui abrir o Explorador de Arquivos: ${error.message}` });
+        json(res, 500, { error: `Não consegui abrir a pasta: ${error.message}` });
       });
       explorer.once('spawn', () => {
         explorer.unref();

@@ -19,11 +19,15 @@ const AVA_URL = 'https://ava.ufms.br';
 const ORGANIZER_DIR = path.resolve(__dirname, '..');
 const TIPOS_SEM_NOTA = new Set(['resource', 'url', 'page', 'book', 'folder', 'label', 'imscp']);
 const MINIMO_CURSOS_CONHECIDO = {};
-const PROFILE_DIR = path.join(
-  process.env.LOCALAPPDATA || path.join(os.homedir(), 'AppData', 'Local'),
-  'ms-playwright',
-  'ava-ufms-organizer'
-);
+const PROFILE_DIR = process.platform === 'darwin'
+  ? path.join(os.homedir(), 'Library', 'Application Support', 'ava-ufms-organizer')
+  : process.platform === 'win32'
+    ? path.join(
+      process.env.LOCALAPPDATA || path.join(os.homedir(), 'AppData', 'Local'),
+      'ms-playwright',
+      'ava-ufms-organizer'
+    )
+    : path.join(os.homedir(), '.local', 'share', 'ava-ufms-organizer');
 
 function carregarPlaywright() {
   const candidatos = [

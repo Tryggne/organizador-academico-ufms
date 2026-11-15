@@ -1,62 +1,59 @@
 # Organizador Acadêmico UFMS
 
-Painel local para acompanhar matérias, módulos, atividades, prazos e notas lidos no AVA UFMS. Os dados são consultados com Playwright e ficam no computador de cada estudante.
+Painel local para acompanhar matérias, módulos, atividades, prazos e notas lidos no AVA UFMS. Os dados de cada estudante ficam no próprio computador.
 
 ## Requisitos
 
-- Windows 10 ou 11
+- Windows 10/11 ou macOS
 - Node.js 20 ou mais recente
 - Acesso ao AVA UFMS
 
-## Instalação e abertura
+## Instalação no Windows
 
 1. Baixe e extraia este projeto.
-2. Dê dois cliques em `1_instalar_dependencias_e_Chromium.vbs`. A instalação roda em segundo plano. Se falhar, consulte `instalacao.log`.
-3. Dê dois cliques em `2_abrir_organizador.vbs`. O painel abrirá no navegador.
-4. Clique em **Buscar dados do AVA**. Se a sessão tiver expirado, uma janela do navegador será aberta para o login.
+2. Abra `1_instalar_dependencias_e_Chromium.vbs`.
+3. Depois da instalação, abra `2_abrir_organizador.vbs`.
+4. No painel, clique em **Buscar dados do AVA**.
 
-Não abra `painel_academico.html` diretamente para atualizar os dados. O HTML precisa do servidor local iniciado pelo arquivo VBS.
+## Instalação no Mac
 
-## Atualizar e organizar
+1. Baixe e extraia este projeto.
+2. Abra o Terminal na pasta extraída e rode `chmod +x 1_instalar_dependencias_e_Chromium.command 2_abrir_organizador.command`.
+3. Abra `1_instalar_dependencias_e_Chromium.command`. A janela do Terminal mostra a instalação das dependências e do Chromium.
+4. Depois, abra `2_abrir_organizador.command` e clique em **Buscar dados do AVA**.
 
-Use **Atualizar dados do AVA** no painel. Durante a leitura, os dados antigos ficam ocultos; ao terminar, aparece o novo retrato.
+Se o macOS impedir a primeira abertura, clique no arquivo com o botão direito, escolha **Abrir** e confirme. Os arquivos `.command` iniciam o servidor local e abrem o painel no navegador. Não abra `painel_academico.html` diretamente para atualizar os dados.
 
-Na página de uma matéria, abra um módulo e use **Criar pasta**. Os caminhos são organizados por semestre, matéria e módulo:
+## Login e atualização
+
+Na primeira leitura, o navegador automatizado abre para você entrar no AVA. A sessão fica salva em um perfil local do Playwright: no Windows, em `%LOCALAPPDATA%/ms-playwright/ava-ufms-organizer`; no Mac, em `~/Library/Application Support/ava-ufms-organizer`.
+
+Nas atualizações seguintes, o Playwright reutiliza essa sessão e consulta o AVA em segundo plano. Se a sessão expirar, uma janela do navegador aparece para você entrar novamente. Use **Atualizar dados do AVA** no painel; durante a consulta, ele esconde os dados antigos e mostra o retrato novo quando terminar.
+
+## Pastas e atividades
+
+Na página de uma matéria, abra um módulo e use **Criar pasta**. O programa cria a pasta e abre o Explorador de Arquivos no Windows ou o Finder no Mac:
 
 - atividade em preparação: `Atividades/Semestre_AAAA_N/Nome_da_Materia/Modulo_N`;
 - etapa manual pendente: `Atividades/A_FAZER/Semestre_AAAA_N/Nome_da_Materia/Modulo_N`;
-- atividade que o estudante confirmou como enviada: `Atividades/FEITOS/Semestre_AAAA_N/Nome_da_Materia/Modulo_N`.
+- atividade confirmada como enviada pelo estudante: `Atividades/FEITOS/Semestre_AAAA_N/Nome_da_Materia/Modulo_N`.
 
 O painel lê o status no AVA. A existência de um arquivo local não confirma o envio. “Conferir envio” significa que o script não confirmou o status; prazo e nota não identificados também não significam que estejam ausentes no AVA.
 
 ## Notas
 
-O painel calcula a média final como `(média dos checkouts × 0,58) + (prova presencial × 0,42)` e usa 6,0 como média mínima. A prova optativa, quando concluída e com nota acima do menor checkout, substitui essa menor nota; ela não é somada como uma avaliação extra. O plano de ensino pode definir quais avaliações são substituíveis.
+O painel calcula a média final como `(média dos checkouts × 0,58) + (prova presencial × 0,42)` e usa 6,0 como média mínima. A prova optativa, quando concluída e com nota acima do menor checkout, substitui essa menor nota; ela não é somada como avaliação extra. O plano de ensino pode definir quais avaliações são substituíveis.
 
-Quando há notas pendentes, a situação projetada considera os valores que ainda faltam. Essa projeção não é uma aprovação oficial: confira o resultado no SISCAD e no AVA.
+Quando há notas pendentes, a situação projetada considera os valores que ainda faltam. Essa projeção não é aprovação oficial: confira o resultado no SISCAD e no AVA.
 
-## Privacidade e arquivos locais
+## Privacidade
 
-Este repositório começa sem cursos, notas, atividades ou retratos de estudante. Cada pessoa lê os dados da própria conta.
-
-Durante o uso, o programa guarda os retratos do AVA em uma pasta `Organizador_Academico_AAAA_N` ao lado desta pasta do projeto. Os arquivos de atividade ficam em `Atividades`, também ao lado do projeto. A sessão local do Playwright fica no perfil do usuário do Windows; ela não é enviada ao repositório. Os logs podem registrar detalhes do processo e estão ignorados pelo Git.
-
-Não inclua no GitHub retratos do AVA, arquivos de atividade, perfil do navegador, credenciais ou logs. O arquivo `.gitignore` bloqueia os padrões locais mais comuns.
+O repositório não contém cursos, notas, atividades, credenciais ou retratos de estudante. Cada pessoa consulta a própria conta. Os retratos ficam em `Organizador_Academico_AAAA_N` ao lado da pasta do projeto; as atividades ficam em `Atividades`, também ao lado do projeto. O organizador não envia trabalhos nem altera notas. Não compartilhe retratos, arquivos de atividade, perfil do navegador ou logs.
 
 ## Outro semestre
 
-Para selecionar um semestre diferente, abra o terminal nesta pasta e execute:
-
-```text
-2_abrir_organizador.vbs --semester 2027.1
-```
-
-O programa cria um retrato separado para esse semestre. Depois da primeira leitura, confira no AVA se todos os cursos, módulos e avaliações foram identificados.
-
-## Leitura do AVA
-
-A consulta é somente de leitura. O organizador não envia trabalhos, não substitui arquivos e não altera notas. Antes de qualquer envio, confira a atividade no AVA e faça a submissão manualmente.
+Para iniciar com outro semestre, passe o argumento ao atalho correspondente. No Windows, abra o VBS pelo terminal; no Mac, rode o `.command` pelo Terminal com `--semester 2027.1`. O programa cria um retrato separado. Depois da primeira leitura, confira no AVA se cursos, módulos, atividades e avaliações foram identificados.
 
 ## Licença
 
-Este projeto é distribuído sob a licença MIT. Consulte o arquivo `LICENSE`.
+Este projeto é distribuído sob a licença MIT. Consulte `LICENSE`.
