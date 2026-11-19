@@ -19,7 +19,7 @@ const AVA_URL = 'https://ava.ufms.br';
 const ORGANIZER_DIR = path.resolve(__dirname, '..');
 const TIPOS_SEM_NOTA = new Set(['resource', 'url', 'page', 'book', 'folder', 'label', 'imscp']);
 const MINIMO_CURSOS_CONHECIDO = {};
-const PROFILE_DIR = process.platform === 'darwin'
+const DEFAULT_PROFILE_DIR = process.platform === 'darwin'
   ? path.join(os.homedir(), 'Library', 'Application Support', 'ava-ufms-organizer')
   : process.platform === 'win32'
     ? path.join(
@@ -28,6 +28,10 @@ const PROFILE_DIR = process.platform === 'darwin'
       'ava-ufms-organizer'
     )
     : path.join(os.homedir(), '.local', 'share', 'ava-ufms-organizer');
+const PROFILE_DIR = process.env.ORGANIZER_PROFILE_DIR
+  ? path.resolve(process.env.ORGANIZER_PROFILE_DIR)
+  : DEFAULT_PROFILE_DIR;
+const LOGIN_READY_MARKER = path.join(PROFILE_DIR, '.ava-login-concluido');
 
 function carregarPlaywright() {
   const candidatos = [
@@ -902,10 +906,14 @@ async function tentarSessaoEmSegundoPlano(page) {
 
 async function abrirContextoComLogin(chromium) {
   const browserPath = chromium.executablePath();
-  const caminhoNavegador = fs.existsSync(browserPath) ? { executablePath: browserPath } : {};
+  if (!fs.existsSync(browserPath)) {
+    throw new Error('O Chromium do Playwright não está instalado. Execute novamente 1_instalar_dependencias_e_Chromium e confira a mensagem da instalação.');
+  }
+  const caminhoNavegador = { executablePath: browserPath };
   const exibirNavegador = process.env.FACULDADE_SHOW_PLAYWRIGHT === '1';
 
-  if (exibirNavegador) {
+  if (exibirNavegador || !fs.existsSync(LOGIN_READY_MARKER)) {
+    console.log('PROGRESS: Abrindo o navegador do AVA para o primeiro login. Entre na janela que aparecer.');
     const context = await chromium.launchPersistentContext(PROFILE_DIR, {
       ...caminhoNavegador,
       headless: false,
@@ -914,9 +922,11 @@ async function abrirContextoComLogin(chromium) {
     const page = context.pages()[0] || await context.newPage();
     page.setDefaultTimeout(12_000);
     await aguardarLogin(page);
+    fs.writeFileSync(LOGIN_READY_MARKER, 'Login confirmado pelo AVA.\n');
     return { context, page };
   }
 
+  console.log('PROGRESS: Verificando a sessão salva do AVA.');
   let context = await chromium.launchPersistentContext(PROFILE_DIR, {
     ...caminhoNavegador,
     headless: true,
@@ -943,8 +953,9 @@ async function abrirContextoComLogin(chromium) {
   });
   page = context.pages()[0] || await context.newPage();
   page.setDefaultTimeout(12_000);
-  console.log('O AVA precisa de login. Uma janela sera aberta; depois do login, a leitura continua.');
+  console.log('PROGRESS: A sessão expirou. Abrindo o navegador para entrar novamente no AVA.');
   await aguardarLogin(page);
+  fs.writeFileSync(LOGIN_READY_MARKER, 'Login confirmado pelo AVA.\n');
   return { context, page };
 }
 
@@ -969,13 +980,14 @@ async function fazerVarredura(semester) {
   const { chromium } = carregarPlaywright();
 
   console.log(`Perfil local do Playwright: ${PROFILE_DIR}`);
-  console.log('A janela do navegador ficará aberta durante a leitura. Nenhum formulário será enviado.');
+  console.log('Nenhum formulário será enviado.');
   let context = null;
   try {
     const sessao = await abrirContextoComLogin(chromium);
     context = sessao.context;
     const page = sessao.page;
 
+    console.log('PROGRESS: Login confirmado. Procurando suas matérias no AVA.');
     const cursosLidos = await coletarCursos(page);
     if (!cursosLidos.length) throw new Error('Não encontrei links de cursos depois do login; dados antigos preservados.');
     const cursosAnteriores = mesmosDadosDoSemestre ? dadosAnteriores.courses || [] : [];
@@ -992,10 +1004,12 @@ async function fazerVarredura(semester) {
       throw new Error(`O AVA mostrou ${cursosCompletos.length} cursos, mas o retrato precisa de pelo menos ${minimoCursos}. Dados anteriores preservados; confira a página “Meus cursos”.`);
     }
     console.log(`Cursos encontrados: ${cursosCompletos.length}`);
+    console.log(`PROGRESS: ${cursosCompletos.length} matéria(s) encontrada(s). Lendo atividades e notas.`);
 
     const cursos = [];
     const linhasDeNotaPorCurso = new Map();
-    for (const curso of cursosCompletos) {
+    for (const [indice, curso] of cursosCompletos.entries()) {
+      console.log(`PROGRESS: Matéria ${indice + 1} de ${cursosCompletos.length}: ${curso.name}`);
       await page.goto(curso.url, { waitUntil: 'domcontentloaded' });
       await aguardarIndiceCurso(page);
       let indiceCurso = await coletarIndiceCurso(page, curso.url);

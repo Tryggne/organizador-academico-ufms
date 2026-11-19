@@ -8,6 +8,8 @@ Painel local para acompanhar matérias, módulos, atividades, prazos e notas lid
 - Node.js 20 ou mais recente
 - Acesso ao AVA UFMS
 
+O instalador baixa automaticamente o Chromium usado pelo Playwright. Não é necessário instalar Chrome ou Safari para a leitura do AVA. O painel pode abrir no seu navegador padrão; a janela de login aparece no Chromium separado.
+
 ## Instalação no Windows
 
 1. Baixe e extraia este projeto.
@@ -27,6 +29,8 @@ Se o macOS impedir a primeira abertura, clique no arquivo com o botão direito, 
 ## Login e atualização
 
 Na primeira leitura, o navegador automatizado abre para você entrar no AVA. A sessão fica salva em um perfil local do Playwright: no Windows, em `%LOCALAPPDATA%/ms-playwright/ava-ufms-organizer`; no Mac, em `~/Library/Application Support/ava-ufms-organizer`.
+
+Se a janela de login não aparecer, confira se ela ficou atrás do painel ou em outra área de trabalho. Se a leitura falhar, a mensagem de erro aparece no painel. No Mac, confira também a instalação do Chromium no Terminal; no Windows, abra `instalacao.log` na pasta do projeto. Em caso de falha no download, rode o instalador novamente.
 
 Nas atualizações seguintes, o Playwright reutiliza essa sessão e consulta o AVA em segundo plano. Se a sessão expirar, uma janela do navegador aparece para você entrar novamente. Use **Atualizar dados do AVA** no painel; durante a consulta, ele esconde os dados antigos e mostra o retrato novo quando terminar.
 

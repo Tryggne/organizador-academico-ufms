@@ -614,8 +614,7 @@ const STORE_KEY = 'organizador-academico';
       const response = await fetch('/api/status', { cache: 'no-store' });
       const state = await response.json();
       if (state.running) {
-        const latest = String(state.output || '').trim().split(/\r?\n/).filter(Boolean).at(-1);
-        scanMessage = latest || 'Lendo cursos, atividades e notas no AVA…';
+        scanMessage = state.progress || 'Lendo cursos, atividades e notas no AVA…';
         render();
         continue;
       }

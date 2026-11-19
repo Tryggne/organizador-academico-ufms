@@ -41,12 +41,15 @@ let scanState = {
   running: false,
   exitCode: null,
   output: '',
+  progress: '',
   startedAt: null,
   finishedAt: null,
 };
 
 function appendOutput(chunk) {
   scanState.output = `${scanState.output}${chunk}`.slice(-16000);
+  const etapas = [...scanState.output.matchAll(/^PROGRESS: (.+)$/gm)];
+  if (etapas.length) scanState.progress = etapas.at(-1)[1].trim();
 }
 
 function json(res, status, value) {
@@ -184,6 +187,7 @@ function iniciarLeitura() {
     running: true,
     exitCode: null,
     output: `Iniciando leitura do semestre ${semester}.\n`,
+    progress: 'Iniciando o navegador para consultar o AVA.',
     startedAt: new Date().toISOString(),
     finishedAt: null,
   };
